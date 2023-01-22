@@ -1,12 +1,10 @@
-import pathlib
+"""Handle application settings."""
+
 import tomllib
 
 
-# BASE_DIR = pathlib.Path(__file__).parent.parent
-# PACKAGE_NAME = 'valet'
-
-
-def load_config(path):
+def load_config(path: str):
+    """Load application's configuration from a TOML file."""
     with open(path, 'rb') as f:
         conf = tomllib.load(f)
     return conf
