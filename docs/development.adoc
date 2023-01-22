@@ -11,6 +11,27 @@ $ source .venv/bin/activate
 $ make test
 ----
 
+== Tips
+
+Clear Github credentials in macOS:
+
+[source, bash]
+----
+$ git credential-osxkeychain erase
+host=github.com
+protocol=https
+[Return]
+----
+
+Set Github's local name and email and list options:
+
+[source, bash]
+----
+$ git config --local user.name "codcod"
+$ git config --local user.email "..."
+$ git config --local -l
+----
+
 == History
 
 Key steps taken while the repository was created.
