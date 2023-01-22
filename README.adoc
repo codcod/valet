@@ -1,6 +1,15 @@
 = Valet
 
-Web application to manage parking spots: handle access requests from users and assign spots with equal rights for everyone.
+Web application to manage parking spots: handle access requests from users and
+assign spots with equal rights for everyone.
+
+Tools used:
+
+* https://docs.aiohttp.org/en/stable/[Aiohttp]
+* https://www.sqlalchemy.org[SQLAlchemy]
+* https://alembic.sqlalchemy.org/en/latest/[Alembic]
+* https://aiosqlite.omnilib.dev/en/stable/[aiosqlite]
+* https://www.sqlite.org/index.html[SQLite]
 
 == Installation
 
@@ -9,6 +18,7 @@ Web application to manage parking spots: handle access requests from users and a
 $ # git clone && cd
 $ make venv
 $ source .venv/bin/activate
+$ alembic upgrade ec5ddda825ce
 $ ./scripts/run
 $ open http://127.0.0.1:8000
 ----

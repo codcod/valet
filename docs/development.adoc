@@ -6,9 +6,9 @@ Git clone the repository, `cd` into it and then:
 
 [source, bash]
 ----
-$ make venv   # one time only
+$ make venv-devel   # one time only
 $ source .venv/bin/activate
-$ make test
+$ alembic upgrade head
 ----
 
 == Tips
