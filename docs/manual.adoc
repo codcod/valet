@@ -1,3 +1,3 @@
 = Parking
 
-link:docs/development.adoc[Development]
+link:development.adoc[Development]
