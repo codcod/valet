@@ -6,10 +6,8 @@ assign spots with equal rights for everyone.
 Tools used:
 
 * https://docs.aiohttp.org/en/stable/[Aiohttp]
-* https://www.sqlalchemy.org[SQLAlchemy]
+* https://www.sqlalchemy.org[SQLAlchemy] (https://aiosqlite.omnilib.dev/en/stable/[aiosqlite] + https://www.sqlite.org/index.html[SQLite])
 * https://alembic.sqlalchemy.org/en/latest/[Alembic]
-* https://aiosqlite.omnilib.dev/en/stable/[aiosqlite]
-* https://www.sqlite.org/index.html[SQLite]
 
 == Installation
 
