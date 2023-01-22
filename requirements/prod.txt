@@ -1,0 +1,5 @@
+aiohttp
+aiosqlite
+alembic
+gunicorn
+sqlalchemy[asyncio] >= 2.0.0rc3

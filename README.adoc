@@ -1,0 +1,16 @@
+= Valet
+
+Web application to manage parking spots: handle access requests from users and assign spots with equal rights for everyone.
+
+== Installation
+
+[source, bash]
+----
+$ # git clone && cd
+$ make venv
+$ source .venv/bin/activate
+$ ./scripts/run
+$ open http://127.0.0.1:8000
+----
+
+See link:docs/manual.adoc[Manual] for documentation.

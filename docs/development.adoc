@@ -1,0 +1,38 @@
+= Development
+
+== Adding new features
+
+Git clone the repository, `cd` into it and then:
+
+[source, bash]
+----
+$ make venv   # one time only
+$ source .venv/bin/activate
+$ make test
+----
+
+== History
+
+Key steps taken while the repository was created.
+
+Push an existing repository from the command line:
+
+[source, bash]
+----
+$ git init
+$ git add .
+$ git commit -m "Initial commit"
+$ git branch -M main
+$ git remote add origin https://github.com/codcod/valet.git
+$ git push -u origin main
+----
+
+Create database migrations:
+
+[source, bash]
+----
+$ alembic init --template async migrations  # alembic.ini:  sqlalchemy.url = sqlite+aiosqlite:///parking.db
+$ alembic revision -m "create schema" 
+$ alembic upgrade head
+$ alembic downgrade base  # alembic downgrade -1
+----
