@@ -1,0 +1,4 @@
+http://127.0.0.1:8000 # no https if explicitly https set
+
+templates
+file_server

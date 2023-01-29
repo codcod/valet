@@ -1,6 +1,10 @@
 """Handle application settings."""
 
+import pathlib
 import tomllib
+
+
+BASE_DIR = pathlib.Path(__file__).parent.parent
 
 
 def load_config(path: str):

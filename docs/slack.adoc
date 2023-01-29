@@ -1,0 +1,55 @@
+= Valet
+
+== Integration with Slack
+
+Before the integration with Slack could be set up a server exposed to the
+Internet is required. This is done with Caddy and Ngrok.
+
+=== Caddy
+
+https://caddyserver.com
+
+[source, bash]
+----
+$ brew install caddy
+$ caddy run --config Caddyfile --watch
+----
+
+Where `Caddyfile` is
+
+....
+http://127.0.0.1:8000 # no https if explicitly https set
+
+templates
+file_server
+....
+
+
+=== Ngrok
+
+https://ngrok.com
+
+Sign up or login to https://ngrok.com. Copy Authtoken from the
+https://dashboard.ngrok.com/get-started/your-authtoken[dashboard].
+
+[source, bash]
+----
+$ brew install ngrok
+$ ngrok config add-authtoken 25vCWkdk[..]xyz
+$ ngrok http https://127.0.0.1:8000 --host-header="127.0.0.1:8000"
+----
+
+=== Slack
+
+
+
+=== References
+
+Start: https://api.slack.com (Your apps)
+Start learning: https://api.slack.com/start
+Building with Python: https://api.slack.com/start/building/bolt-python
+
+Bolt: https://slack.dev/bolt-python/concepts
+Bolt examples: https://github.com/slackapi/bolt-python/tree/main/examples
+
+Slack Developer Tools: https://sdt.builtbyslack.com
