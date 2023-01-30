@@ -5,7 +5,7 @@ from valet.settings import load_config, BASE_DIR
 
 
 logging.basicConfig(level=logging.DEBUG)
-config = load_config(BASE_DIR / 'instance/slack-config.toml')['slack']
+config = load_config(BASE_DIR / '.instance/slack-config.toml')['slack']
 
 
 app = AsyncApp(token=config['TOKEN'], signing_secret=config['SIGNING_SECRET'])

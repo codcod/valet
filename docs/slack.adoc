@@ -85,6 +85,35 @@ adev runserver \
     bot.py
 ----
 
+==== Security tokens
+
+Credentials are required to connect to Slack. You may need to reinstall the
+Slack app into the workspace for credentials to be generated and shown.
+
+Go to _Your Apps_ -> _Basic Information_. In _App Credentials_ section you can
+find _Signing Secret_.
+
+Go to _Your Apps_ -> _OAuth & Permissions_. In _OAuth Tokens for Your
+Workspace_ section you can find _Bot User OAuth Token_.
+
+Either export these in the shell before running the app:
+
+[source, bash]
+----
+$ export SLACK_SIGNING_SECRET=ab1234
+$ export SLACK_BOT_TOKEN=xoxb-cd5678
+----
+
+or pass them while creating an app object:
+
+[source, python]
+----
+app = AsyncApp(
+    token='xoxb-cd5678',
+    signing_secret='ab1234'
+)
+----
+
 === References
 
 * Start: https://api.slack.com (Your apps)
