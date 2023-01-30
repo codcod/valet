@@ -11,8 +11,8 @@ Tools used:
 
 == Installation
 
-Get Slack credentials (see <<Security tokens>>) and save them in
-`.instance/slack-config.toml`:
+Get Slack credentials (see link:docs/slack.adoc#security-tokens[Security
+tokens]) and save them in `.instance/slack-config.toml`:
 
 [source, toml]
 ----
