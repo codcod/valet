@@ -11,6 +11,18 @@ Tools used:
 
 == Installation
 
+Get Slack credentials (see <<Security tokens>>) and save them in
+`.instance/slack-config.toml`:
+
+[source, toml]
+----
+[slack]
+TOKEN = 'xoxb-cd5678'
+SIGNING_SECRET = 'ab1234'
+----
+
+Create virtual environment, setup the database and finally run the bot:
+
 [source, bash]
 ----
 $ # git clone && cd
