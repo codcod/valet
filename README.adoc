@@ -17,8 +17,7 @@ $ # git clone && cd
 $ make venv
 $ source .venv/bin/activate
 $ alembic upgrade ec5ddda825ce
-$ ./scripts/run
-$ open http://127.0.0.1:8000
+$ ./scripts/bot
 ----
 
 See link:docs/manual.adoc[Manual] for documentation.
