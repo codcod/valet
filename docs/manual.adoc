@@ -1,4 +1,4 @@
 = Valet
 
-link:development.adoc[Development]
-link:slack.adoc[Integration with Slack]
+* link:development.adoc[Development]
+* link:slack.adoc[Integration with Slack]
