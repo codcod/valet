@@ -39,6 +39,7 @@ def upgrade() -> None:
     op.execute('insert into statuses(status_id, name) values (405, "unused")')
     op.execute('insert into statuses(status_id, name) values (410, "resigned")')
 
+    # 2023-01-01 has complete 'workflow' for all requestors
     op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:01:00", "2023-01-01", 1, 100)')
     op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:02:00", "2023-01-01", 2, 100)')
     op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:03:00", "2023-01-01", 3, 100)')
@@ -53,6 +54,13 @@ def upgrade() -> None:
     op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:11:01", "2023-01-01", 1, 401)')
     op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:12:01", "2023-01-01", 2, 410)')
 
+    # 2023-01-02 has only 3 requestors waiting for the lottery and 1 who cancelled
+    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-02 11:01:00", "2023-01-02", 1, 100)')
+    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-02 11:02:00", "2023-01-02", 2, 100)')
+    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-02 11:03:00", "2023-01-02", 4, 100)')
+    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-02 11:04:00", "2023-01-02", 3, 100)')
+    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-02 11:05:00", "2023-01-02", 3, 210)')
+    
     op.execute('insert into assignments (parking_day, user_id, spot_id) values ("2023-01-01", 1, 1)')
 
 
