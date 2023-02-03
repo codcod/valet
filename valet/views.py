@@ -3,7 +3,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 
 from valet import db
-from valet.json import dumps
+from valet.encoder import dumps
 
 routes = web.RouteTableDef()
 
