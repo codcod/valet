@@ -8,6 +8,8 @@ Create Date: 2023-01-22 15:43:34.071949
 from alembic import op
 import sqlalchemy as sa
 
+from datetime import datetime as dt
+
 
 # revision identifiers, used by Alembic.
 revision = 'd26fafd3a01b'
@@ -39,29 +41,45 @@ def upgrade() -> None:
     op.execute('insert into statuses(status_id, name) values (405, "unused")')
     op.execute('insert into statuses(status_id, name) values (410, "resigned")')
 
-    # 2023-01-01 has complete 'workflow' for all requestors
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:01:00", "2023-01-01", 1, 100)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:02:00", "2023-01-01", 2, 100)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:03:00", "2023-01-01", 3, 100)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:04:00", "2023-01-01", 4, 100)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:05:00", "2023-01-01", 4, 210)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:10:01", "2023-01-01", 1, 201)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:10:01", "2023-01-01", 2, 201)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:10:01", "2023-01-01", 3, 201)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:10:02", "2023-01-01", 1, 301)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:10:02", "2023-01-01", 2, 301)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:10:02", "2023-01-01", 3, 310)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:11:01", "2023-01-01", 1, 401)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-01 10:12:01", "2023-01-01", 2, 410)')
-
-    # 2023-01-02 has only 3 requestors waiting for the lottery and 1 who cancelled
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-02 11:01:00", "2023-01-02", 1, 100)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-02 11:02:00", "2023-01-02", 2, 100)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-02 11:03:00", "2023-01-02", 4, 100)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-02 11:04:00", "2023-01-02", 3, 100)')
-    op.execute('insert into workflow (timestamp, parking_day, user_id, status_id) values ("2022-12-02 11:05:00", "2023-01-02", 3, 210)')
+    # temporary table to create inserts
+    workflow_table = sa.sql.table(
+        'workflow',
+        sa.Column('workflow_id', sa.Integer, autoincrement=True),
+        sa.Column('timestamp', sa.DateTime, index=True, default=dt.utcnow),
+        sa.Column('parking_day', sa.Date),
+        sa.Column('user_id', sa.Integer, sa.ForeignKey('users.user_id')),
+        sa.Column('status_id', sa.Integer, sa.ForeignKey('statuses.status_id')),
+    )
     
-    op.execute('insert into assignments (parking_day, user_id, spot_id) values ("2023-01-01", 1, 1)')
+    d1 = dt(2023, 1, 1).date()
+    d2 = dt(2023, 1, 2).date()
+    op.bulk_insert(workflow_table,
+        [
+            # 2023-01-01 has complete 'workflow' for all requestors
+            {'timestamp': dt(2022, 12, 1, 10,  1, 0), 'parking_day': d1, 'user_id': 1, 'status_id': 100},
+            {'timestamp': dt(2022, 12, 1, 10,  2, 0), 'parking_day': d1, 'user_id': 2, 'status_id': 100},
+            {'timestamp': dt(2022, 12, 1, 10,  3, 0), 'parking_day': d1, 'user_id': 3, 'status_id': 100},
+            {'timestamp': dt(2022, 12, 1, 10,  4, 0), 'parking_day': d1, 'user_id': 4, 'status_id': 100},
+            {'timestamp': dt(2022, 12, 1, 10,  5, 0), 'parking_day': d1, 'user_id': 4, 'status_id': 210},
+            {'timestamp': dt(2022, 12, 1, 10, 10, 1), 'parking_day': d1, 'user_id': 1, 'status_id': 201},
+            {'timestamp': dt(2022, 12, 1, 10, 10, 1), 'parking_day': d1, 'user_id': 2, 'status_id': 201},
+            {'timestamp': dt(2022, 12, 1, 10, 10, 1), 'parking_day': d1, 'user_id': 3, 'status_id': 201},
+            {'timestamp': dt(2022, 12, 1, 10, 10, 1), 'parking_day': d1, 'user_id': 1, 'status_id': 301},
+            {'timestamp': dt(2022, 12, 1, 10, 10, 2), 'parking_day': d1, 'user_id': 2, 'status_id': 301},
+            {'timestamp': dt(2022, 12, 1, 10, 10, 2), 'parking_day': d1, 'user_id': 3, 'status_id': 310},
+            {'timestamp': dt(2022, 12, 1, 10, 11, 1), 'parking_day': d1, 'user_id': 1, 'status_id': 401},
+            {'timestamp': dt(2022, 12, 1, 10, 12, 1), 'parking_day': d1, 'user_id': 2, 'status_id': 410},
+            
+            # 2023-01-02 has only 3 requestors waiting for the lottery and 1 who cancelled
+            {'timestamp': dt(2022, 12, 2, 11, 1, 0), 'parking_day': d2, 'user_id': 1, 'status_id': 100},
+            {'timestamp': dt(2022, 12, 2, 11, 2, 0), 'parking_day': d2, 'user_id': 2, 'status_id': 100},
+            {'timestamp': dt(2022, 12, 2, 11, 3, 0), 'parking_day': d2, 'user_id': 4, 'status_id': 100},
+            {'timestamp': dt(2022, 12, 2, 11, 4, 0), 'parking_day': d2, 'user_id': 3, 'status_id': 100},
+            {'timestamp': dt(2022, 12, 2, 11, 5, 0), 'parking_day': d2, 'user_id': 3, 'status_id': 210},
+
+        ]
+
+    )
 
 
 def downgrade() -> None:
