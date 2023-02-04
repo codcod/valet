@@ -24,12 +24,6 @@ group by w.user_id
 ;
 
 
--- add new winner
-/*insert into workflow (timestamp, parking_day, user_id, status_id)
-values (now(), "2023-01-01", 3, 301)
-;*/
-
-
 -- which spots are not taken on a given day
 select * from spots
 where spot_id in (
