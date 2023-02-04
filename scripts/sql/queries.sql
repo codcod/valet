@@ -6,8 +6,8 @@ from workflow w
 join users u on u.user_id = w.user_id
 join statuses s on s.status_id = w.status_id
 where 
-    w.status_id in (100, 210)
-    and w.parking_day="2023-01-01"
+    w.status_id in (100, 210, 301, 310)
+    and w.parking_day="2023-01-02"
 group by w.user_id
 having s.status_id in (100)
 ;
