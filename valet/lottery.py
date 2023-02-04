@@ -46,6 +46,8 @@ def replace_win_with_weight(draws_won: dict[str, int]) -> dict[str, float]:
 
 
 def draw(players: list[str], all_winnings: list[tuple[int, int]]):
+    if not players:
+        return []
     wins = draws_won_by_players(players, all_winnings)
     wins = replace_win_with_weight(wins)
     winners = choices(list(wins.keys()), weights=list(wins.values()))
