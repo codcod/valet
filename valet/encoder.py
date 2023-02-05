@@ -1,19 +1,26 @@
-"""Tools for JSON encoding."""
+"""
+Tools for JSON encoding.
+"""
 
-import functools
 import json
+import typing as tp
 from datetime import datetime as dt
+from functools import partial
 
 from sqlalchemy import Row
-
 
 __all__ = ['dumps']
 
 
 class EnhancedJSONEncoder(json.JSONEncoder):
-    """Enhanced JSONEncoder is able to encode datetimes and sqlalchemy.Rows."""
+    """
+    Enhanced JSONEncoder is able to encode datetimes and sqlalchemy.Rows.
+    """
 
-    def default(self, obj):
+    def default(self, obj: tp.Any) -> tp.Any:
+        """
+        Method to be implemented in a subclass such that it returns a serializable object.
+        """
         if isinstance(obj, dt):
             return obj.strftime('%Y-%m-%d')
         if isinstance(obj, Row):
@@ -21,4 +28,4 @@ class EnhancedJSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-dumps = functools.partial(json.dumps, cls=EnhancedJSONEncoder)
+dumps = partial(json.dumps, cls=EnhancedJSONEncoder)
