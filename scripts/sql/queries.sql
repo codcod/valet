@@ -24,6 +24,32 @@ group by w.user_id
 ;
 
 
+-- choose past winners but restricted only to current requestors 
+select u.user_id, u.name, u.surname, count(*) as WINS
+from workflow w
+join users u on u.user_id = w.user_id
+join statuses s on s.status_id = w.status_id
+where 
+    w.status_id in (401, 402)
+    and u.user_id in (
+
+        select 1 from (
+            select u.user_id, max(w.timestamp)
+            from workflow w
+            join users u on u.user_id = w.user_id
+            join statuses s on s.status_id = w.status_id
+            where 
+                w.status_id in (100, 210, 301, 310)
+                and w.parking_day="2023-01-02"
+            group by w.user_id
+            having s.status_id in (100)
+        )
+
+    )
+group by w.user_id
+;
+
+
 -- which spots are not taken on a given day
 select * from spots
 where spot_id in (
