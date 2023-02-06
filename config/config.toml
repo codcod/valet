@@ -1,4 +1,4 @@
 [database]
 
-DB_URL = 'sqlite+aiosqlite:///instance/valet.db'
-DB_ECHO = true
+DB_URL = 'sqlite+aiosqlite:///.instance/valet.db'
+DB_ECHO = false
