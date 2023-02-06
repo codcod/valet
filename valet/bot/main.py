@@ -1,12 +1,15 @@
+"""
+Slack bot to receive slash commands.
+"""
+
 import logging
 
 from slack_bolt.async_app import AsyncApp
-from valet.settings import load_config, BASE_DIR
 
+from valet.settings import BASE_DIR, load_config
 
 logging.basicConfig(level=logging.DEBUG)
 config = load_config(BASE_DIR / '.instance/slack-config.toml')['slack']
-
 
 app = AsyncApp(token=config['TOKEN'], signing_secret=config['SIGNING_SECRET'])
 
