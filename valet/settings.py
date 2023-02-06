@@ -1,13 +1,16 @@
-"""Handle application settings."""
+"""
+Handle application settings.
+"""
 
 import pathlib
 import tomllib
+import typing as tp
 
 
 BASE_DIR = pathlib.Path(__file__).parent.parent
 
 
-def load_config(path: str):
+def load_config(path: str) -> dict[str, tp.Any]:
     """Load application's configuration from a TOML file."""
     with open(path, 'rb') as f:
         conf = tomllib.load(f)
