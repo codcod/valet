@@ -1,0 +1,1 @@
+PYTHONPATH=. adev runserver --host 127.0.0.1 --port 8000 --app-factory app_factory valet/bot/main.py

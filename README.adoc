@@ -11,14 +11,25 @@ Tools used:
 
 == Installation
 
+Get Slack credentials (see link:docs/slack.adoc#security-tokens[Security
+tokens]) and save them in `.instance/slack-config.toml`:
+
+[source, toml]
+----
+[slack]
+TOKEN = 'xoxb-cd5678'
+SIGNING_SECRET = 'ab1234'
+----
+
+Create virtual environment, setup the database and finally run the bot:
+
 [source, bash]
 ----
 $ # git clone && cd
 $ make venv
 $ source .venv/bin/activate
 $ alembic upgrade ec5ddda825ce
-$ ./scripts/run
-$ open http://127.0.0.1:8000
+$ ./scripts/bot
 ----
 
 See link:docs/manual.adoc[Manual] for documentation.

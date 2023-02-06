@@ -1,0 +1,126 @@
+= Valet
+
+== Integration with Slack
+
+Before the integration with Slack could be set up a server exposed to the
+Internet is required. This is done with Ngrok.
+
+=== Ngrok
+
+https://ngrok.com
+
+Sign up or login to https://ngrok.com. Copy Authtoken from the
+https://dashboard.ngrok.com/get-started/your-authtoken[dashboard].
+
+[source, bash]
+----
+$ brew install ngrok
+$ ngrok config add-authtoken 25vCWkdk[..]xyz
+$ ngrok http https://127.0.0.1:8000 --host-header="127.0.0.1:8000"
+----
+
+The address exposed by Ngrok is used in the Slack integration while creating a
+new Slack app.
+
+=== Slack
+
+Go to https://api.slack.com/apps and create a new app from an app manifest.
+Change the url to the one exposed dynamically by Ngrok.
+
+[source, yaml]
+----
+display_information:
+  name: Valet
+features:
+  app_home:
+    home_tab_enabled: true
+    messages_tab_enabled: false
+    messages_tab_read_only_enabled: true
+  bot_user:
+    display_name: Valet
+    always_online: true
+  slash_commands:
+    - command: /parking
+      url: https://87ff-89-64-1-231.eu.ngrok.io/slack/events
+      description: Tell the Valet what to do
+      usage_hint: "[command] [args]"
+      should_escape: false
+oauth_config:
+  scopes:
+    bot:
+      - im:history
+      - im:write
+      - im:read
+      - chat:write
+      - commands
+settings:
+  event_subscriptions:
+    request_url: https://87ff-89-64-1-231.eu.ngrok.io/slack/events
+    bot_events:
+      - app_home_opened
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
+
+----
+
+The resource `/slack/events` is created by default in the Bolt app:
+
+[source, python]
+----
+from slack_bolt.async_app import AsyncApp
+app = AsyncApp()
+
+def app_factory():
+    return app.web_app(path='/slack/events')
+----
+
+You can run the app with a development server:
+
+[source, bash]
+----
+adev runserver \
+    --host 127.0.0.1 --port 8000 \
+    --app-factory app_factory \
+    bot.py
+----
+
+==== Security tokens
+
+Credentials are required to connect to Slack. You may need to reinstall the
+Slack app into the workspace for credentials to be generated and shown.
+
+Go to _Your Apps_ -> _Basic Information_. In _App Credentials_ section you can
+find _Signing Secret_.
+
+Go to _Your Apps_ -> _OAuth & Permissions_. In _OAuth Tokens for Your
+Workspace_ section you can find _Bot User OAuth Token_.
+
+Either export these in the shell before running the app:
+
+[source, bash]
+----
+$ export SLACK_SIGNING_SECRET=ab1234
+$ export SLACK_BOT_TOKEN=xoxb-cd5678
+----
+
+or pass them while creating an app object:
+
+[source, python]
+----
+app = AsyncApp(
+    token='xoxb-cd5678',
+    signing_secret='ab1234'
+)
+----
+
+=== References
+
+* Start: https://api.slack.com (Your apps)
+* Start learning: https://api.slack.com/start
+* Building with Python: https://api.slack.com/start/building/bolt-python
+
+* Bolt: https://slack.dev/bolt-python/concepts
+* Bolt examples: https://github.com/slackapi/bolt-python/tree/main/examples
+
+* Slack Developer Tools: https://sdt.builtbyslack.com
