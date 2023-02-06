@@ -13,7 +13,7 @@ venv-devel: venv
 	
 
 check:
-	mypy --strict --scripts-are-modules --implicit-reexport messaging
+	mypy --strict --scripts-are-modules --implicit-reexport valet
 		#scripts/*
 
 test:

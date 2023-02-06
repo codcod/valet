@@ -34,23 +34,31 @@ def upgrade() -> None:
     op.create_table(
         'statuses',
         sa.Column('status_id', sa.Integer, primary_key=True),
-        sa.Column('tag', sa.String(64)),
-        sa.Column('descr', sa.String(200)),
+        sa.Column('name', sa.String(64)),
         sqlite_autoincrement=True
     )
     op.create_table(
         'assignments',
         sa.Column('assignment_id', sa.Integer, primary_key=True),
-        sa.Column('parking_day', sa.DateTime, index=True, default=dt.utcnow),
+        sa.Column('parking_day', sa.Date),
         
         sa.Column('user_id', sa.Integer, sa.ForeignKey('users.user_id')),
         sa.Column('spot_id', sa.Integer, sa.ForeignKey('spots.spot_id')),
+    )
+    op.create_table(
+        'workflow',
+        sa.Column('workflow_id', sa.Integer, primary_key=True),
+        sa.Column('timestamp', sa.DateTime, index=True, default=dt.utcnow),
+        sa.Column('parking_day', sa.Date),
+        
+        sa.Column('user_id', sa.Integer, sa.ForeignKey('users.user_id')),
         sa.Column('status_id', sa.Integer, sa.ForeignKey('statuses.status_id')),
     )
 
 
 def downgrade() -> None:
+    op.drop_table('assignments')
+    op.drop_table('workflow')
     op.drop_table('users')
     op.drop_table('spots')
-    op.drop_table('assignments')
     op.drop_table('statuses')
