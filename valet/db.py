@@ -104,14 +104,16 @@ async def available_parking_spots(
     """
     Select parking spots that are available on a given day and return their ids.
     """
-    stmt = text('''
+    stmt = text(
+        '''
     select spot_id from spots
     where spot_id in (
         select spot_id as id from spots
         except
         select assignment_id as id from assignments
         where parking_day = :day
-    )''')
+    )'''
+    )
     records = await conn.execute(stmt, {'day': parking_day})
     return [r[0] for r in records]
 
@@ -152,10 +154,10 @@ async def save_results(
                 'user_id': user_id,
                 'spot_id': spot_id,
             }
-            for user_id, spot_id in zip(winners, parking_spots)  
-        ]
+            for user_id, spot_id in zip(winners, parking_spots)
+        ],
     )
-    
+
     # store losers
     if losers:
         await conn.execute(
