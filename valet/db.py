@@ -7,7 +7,7 @@ from datetime import datetime as dt
 
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
-from sqlalchemy.sql import and_, func, insert, select
+from sqlalchemy.sql import and_, func, insert, select, text
 
 from . import const
 from .types_ import ValetConfig, Winnings
@@ -102,9 +102,18 @@ async def available_parking_spots(
     conn: AsyncConnection, parking_day: dt.date
 ) -> list[int]:
     """
-    Select parking spots that are available on a given day and return ids.
+    Select parking spots that are available on a given day and return their ids.
     """
-    return list(range(1, 7))
+    stmt = text('''
+    select spot_id from spots
+    where spot_id in (
+        select spot_id as id from spots
+        except
+        select assignment_id as id from assignments
+        where parking_day = :day
+    )''')
+    records = await conn.execute(stmt, {'day': parking_day})
+    return [r[0] for r in records]
 
 
 async def save_results(
@@ -112,12 +121,13 @@ async def save_results(
     parking_day: dt,
     winners: list[int],
     parking_spots: list[int],
-    losers: list[int],
+    losers: list[int] = None,
 ) -> None:
     """
     Save lottery results.
     """
     workflow = metadata.tables['workflow']
+    assignments = metadata.tables['assignments']
 
     # store winners
     await conn.execute(
@@ -133,21 +143,32 @@ async def save_results(
         ],
     )
 
-    # store losers
+    # store parking spots assignments
     await conn.execute(
-        insert(workflow),
+        insert(assignments),
         [
             {
-                'timestamp': dt.now(),
                 'parking_day': parking_day,
-                'status_id': const.STATUS_LOST,
-                'user_id': id,
+                'user_id': user_id,
+                'spot_id': spot_id,
             }
-            for id in losers
-        ],
+            for user_id, spot_id in zip(winners, parking_spots)  
+        ]
     )
-
-    # store parking spots assignments
     
+    # store losers
+    if losers:
+        await conn.execute(
+            insert(workflow),
+            [
+                {
+                    'timestamp': dt.now(),
+                    'parking_day': parking_day,
+                    'status_id': const.STATUS_LOST,
+                    'user_id': id,
+                }
+                for id in losers
+            ],
+        )
 
     await conn.commit()

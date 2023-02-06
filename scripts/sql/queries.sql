@@ -56,7 +56,7 @@ where spot_id in (
     select spot_id as id from spots
     except
     select assignment_id as id from assignments
-    where parking_day = "2023-01-01"
+    where parking_day = "2023-01-02"
 )
 ;
 

@@ -10,36 +10,21 @@ from random import choices
 
 from .types_ import Winnings, WeightedWinnings
 
-# def draws_won_by_players_2(
-#     players: list[str], all_winnings: list[tuple[int, int]]
-# ) -> dict[str, int]:
-#     '''Calculate weights used in randomly choosing a winner to ensure a fair choice'''
-#     # choose only those among all winners that currently in play
-#     winnings = dict(all_winnings)
-#     winners_in_play = [(k, v) for k, v in winnings.items() if k in players]
-#     # update players with winners in play
-#     current_players: dict = {name: 0 for name in players}  # change a list into a dict
-#     current_players.update(winners_in_play)
-#     return current_players
 
-
-def restrict_winnings_to_requestors(
-    requestors: list[str], all_winnings: Winnings
-) -> Winnings:
+def filter_out_winnings(requestors: list[str], winnings: Winnings) -> Winnings:
     """
-    From all winnings take out only those ones the requestors had.
+    How many times the requestors won a parking spot.
 
     In other words from the dictionary that collects all users and the count
     how many times they won take only those 'rows' that refer to current
     requestors. Take the dictionary with all winnings and return the dictionary
     containing winnings of the requestors only.
     """
-    current_players = {name: 0 for name in requestors}  # change a list into a dict
-    winnings = dict(all_winnings)
-    keys = winnings.keys() & current_players.keys()
+    reqs_dict = {name: 0 for name in requestors}  # change a list into a dict
+    keys = winnings.keys() & reqs_dict.keys()
     wins = {k: v for k, v in winnings.items() if k in keys}
-    current_players.update(wins)
-    return current_players
+    reqs_dict.update(wins)
+    return reqs_dict
 
 
 def replace_wins_with_weight(winnings: Winnings) -> WeightedWinnings:
@@ -61,9 +46,9 @@ def draw(requestors: list[str], winnings: Winnings, k: int = 1):
     if not requestors:
         return []
 
-    restricted_winnings = restrict_winnings_to_requestors(requestors, winnings)
-    weighted_winnings = replace_wins_with_weight(restricted_winnings)
+    wins = filter_out_winnings(requestors, winnings)
+    weighted_wins = replace_wins_with_weight(wins)
     winners = choices(
-        list(weighted_winnings.keys()), weights=list(weighted_winnings.values()), k=k
+        list(weighted_wins.keys()), weights=list(weighted_wins.values()), k=k
     )
     return winners

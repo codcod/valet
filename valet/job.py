@@ -66,9 +66,9 @@ def date_range(
     return (monday + timedelta(days=d) for d in range(days))
 
 
-async def run_lottery(conn: AsyncConnection, parking_day: dt.date):
+async def run_lottery(conn: AsyncConnection, parking_day: dt.date) -> None:
     """
-    Run the lottery for a given parking day.
+    Run the lottery for a given parking day and subsequently assign parking spots.
     """
     requestors = await db.select_requestors(conn, parking_day)
     if requestors:
@@ -77,21 +77,29 @@ async def run_lottery(conn: AsyncConnection, parking_day: dt.date):
         logger.debug(f'No requests for parking day={parking_day:%Y-%m-%d, %A}')
         return
 
-    past_winnings = await db.past_winnings(conn)
-    logger.debug(f'{past_winnings=}')
-
     parking_spots = await db.available_parking_spots(conn, parking_day)
     k = len(parking_spots)
-    logger.debug(f'{k=}')
+    logger.debug(f'{k=} | {parking_spots=}')
 
-    winners = lottery.draw(requestors, past_winnings, k)
-    logger.debug(f'{winners=}')
+    if k <= 0:
+        logger.debug('For some reason there are no parking spots left')
+        return
 
-    if winners:
-        losers = [user for user in requestors if user not in winners]
-        await db.save_results(conn, parking_day, winners, parking_spots, losers)
-    else:
-        logger.debug('There are no winners, nothing to save')
+    if len(requestors) <= k:
+        await db.save_results(conn, parking_day, requestors, parking_spots)
+
+    elif len(requestors) > k:
+        past_winnings = await db.past_winnings(conn)
+        logger.debug(f'{past_winnings=}')
+
+        winners = lottery.draw(requestors, past_winnings, k)
+        logger.debug(f'{winners=}')
+
+        if winners:
+            losers = [user for user in requestors if user not in winners]
+            await db.save_results(conn, parking_day, winners, parking_spots, losers)
+        else:
+            logger.debug('There are no winners, nothing to save')
 
 
 async def main():
