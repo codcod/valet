@@ -1,6 +1,6 @@
 import pytest
 
-from valet.lottery import draw
+from valet.job.lottery import draw
 
 PLAYERS = list('abcd')
 WINNINGS = {

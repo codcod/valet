@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
 from sqlalchemy.sql import and_, func, insert, select, text
 
 from . import const
-from .types_ import ValetConfig, Winnings
+from .types import ValetConfig, Winnings
 
 metadata = MetaData()
 

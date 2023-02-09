@@ -17,8 +17,9 @@ from datetime import timedelta
 
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine
 
-from valet import db, lottery, settings
-from valet.types_ import ValetConfig
+from valet import db, settings
+from valet.job import lottery
+from valet.types import ValetConfig
 
 logger = logging.getLogger(__name__)
 
@@ -102,7 +103,7 @@ async def run_lottery(conn: AsyncConnection, parking_day: dt.date) -> None:
             logger.debug('There are no winners, nothing to save')
 
 
-async def main():
+async def run_job():
     """
     Main part of the job.
     """
@@ -118,7 +119,3 @@ async def main():
             await run_lottery(conn, day)
 
         await teardown_db(engine)
-
-
-if __name__ == '__main__':
-    asyncio.run(main())

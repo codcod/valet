@@ -4,7 +4,7 @@ from aiohttp import web
 
 from valet import db
 from valet.settings import load_config
-from valet.views import routes
+from valet.web.views import routes
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
