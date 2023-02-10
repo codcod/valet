@@ -1,1 +1,1 @@
-PYTHONPATH=. gunicorn valet.app:make_app -w 1 -k aiohttp.GunicornWebWorker --reload
+PYTHONPATH=. gunicorn valet.web.app:make_app -w 1 -k aiohttp.GunicornWebWorker --reload

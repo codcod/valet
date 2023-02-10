@@ -1,1 +1,1 @@
-PYTHONPATH=.:scripts python -O valet/job.py
+PYTHONPATH=.:scripts python -O -m valet.job
