@@ -8,7 +8,6 @@ the database.
 Intended to be a main module (hence absolute imports).
 """
 
-import asyncio
 import logging
 import time
 import typing as tp
@@ -18,7 +17,7 @@ from datetime import timedelta
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine
 
 from valet import db, settings
-from valet.job import lottery
+from valet.job import lottery, slack
 from valet.types import ValetConfig
 
 logger = logging.getLogger(__name__)
@@ -60,7 +59,7 @@ def date_range(
     start: dt.date = dt.today().date(), days: int = 5
 ) -> tp.Generator[dt.date, None, None]:
     """
-    Generates 'days' days starting with the next Monday after the `start` day.
+    Generate 'days' days starting with the next Monday after the `start` day.
     """
     until_monday = 7 - start.isoweekday() + 1
     monday = start + timedelta(days=until_monday)
@@ -88,6 +87,7 @@ async def run_lottery(conn: AsyncConnection, parking_day: dt.date) -> None:
 
     if len(requestors) <= k:
         await db.save_results(conn, parking_day, requestors, parking_spots)
+        await slack.post_message(f'Winners are {requestors} and <@U040RMTUD8E>')
 
     elif len(requestors) > k:
         past_winnings = await db.past_winnings(conn)
@@ -99,6 +99,7 @@ async def run_lottery(conn: AsyncConnection, parking_day: dt.date) -> None:
         if winners:
             losers = [user for user in requestors if user not in winners]
             await db.save_results(conn, parking_day, winners, parking_spots, losers)
+            await slack.post_message(f'Winners are {winners}')
         else:
             logger.debug('There are no winners, nothing to save')
 
