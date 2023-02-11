@@ -8,7 +8,7 @@ spot too.
 
 from random import choices
 
-from ..types import Winnings, WeightedWinnings
+from ..types import WeightedWinnings, Winnings
 
 
 def filter_out_winnings(requestors: list[str], winnings: Winnings) -> Winnings:
