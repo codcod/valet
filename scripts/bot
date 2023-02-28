@@ -1,1 +1,2 @@
-PYTHONPATH=. adev runserver --host 127.0.0.1 --port 8000 --app-factory app_factory valet/bot/main.py
+# PYTHONPATH=. adev runserver --host 127.0.0.1 --port 8000 --app-factory app_factory valet/bot/main.py
+PYTHONPATH=. uvicorn valet.bot.app:api --reload --port 8000 --host 127.0.0.1 --log-level debug 
