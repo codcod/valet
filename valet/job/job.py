@@ -37,7 +37,7 @@ async def run_lottery(conn: AsyncConnection, parking_day: dt.date) -> None:
     """
     Run the lottery for a given parking day and subsequently assign parking spots.
     """
-    requestors = await db.select_requestors(conn, parking_day)
+    requestors = await db.requestors_for_given_day(conn, parking_day)
     if requestors:
         logger.debug(f'{requestors=}')
     else:
@@ -53,7 +53,7 @@ async def run_lottery(conn: AsyncConnection, parking_day: dt.date) -> None:
         return
 
     if len(requestors) <= k:
-        await db.save_results(conn, parking_day, requestors, parking_spots)
+        await db.save_lottery_results(conn, parking_day, requestors, parking_spots)
 
     elif len(requestors) > k:
         past_winnings = await db.past_winnings(conn)
@@ -64,7 +64,7 @@ async def run_lottery(conn: AsyncConnection, parking_day: dt.date) -> None:
 
         if winners:
             losers = [user for user in requestors if user not in winners]
-            await db.save_results(conn, parking_day, winners, parking_spots, losers)
+            await db.save_lottery_results(conn, parking_day, winners, parking_spots, losers)
         else:
             logger.debug('There are no winners, nothing to save')
 

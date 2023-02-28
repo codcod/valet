@@ -8,7 +8,7 @@ from valet.database import metadata
 from valet.types import Winnings
 
 
-async def select_requestors(conn: AsyncConnection, parking_day: dt.date) -> list[int]:
+async def requestors_for_given_day(conn: AsyncConnection, parking_day: dt.date) -> list[int]:
     """
     Select all users requesting a parking spot on a given day and return their ids.
     """
@@ -87,7 +87,7 @@ async def available_parking_spots(
     return [r[0] for r in records]
 
 
-async def save_results(
+async def save_lottery_results(
     conn: AsyncConnection,
     parking_day: dt,
     winners: list[int],
@@ -145,9 +145,9 @@ async def save_results(
     await conn.commit()
 
 
-async def user_standing_requests(conn: AsyncConnection, id: int):
+async def user_standing_requests(conn: AsyncConnection, user_id: int):
     """
-    Select parking spots that are available on a given day and return their ids.
+    Select all `open` requests of a given user.
     """
     stmt = text(
         '''
@@ -156,10 +156,10 @@ async def user_standing_requests(conn: AsyncConnection, id: int):
     join users u on u.user_id = w.user_id
     join statuses s on s.status_id = w.status_id
     where 
-        u.user_id = :id
+        u.user_id = :user_id
     group by w.parking_day
     having s.status_id in (100)
     '''
     )
-    records = await conn.execute(stmt, {'id': id})
+    records = await conn.execute(stmt, {'id': user_id})
     return list(records)
