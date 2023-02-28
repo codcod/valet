@@ -2,7 +2,7 @@ import logging
 
 from aiohttp import web
 
-from valet import db
+from valet import database
 from valet.settings import load_config
 from valet.web.views import routes
 
@@ -12,13 +12,10 @@ logger = logging.getLogger(__name__)
 
 async def setup_app(app: web.Application) -> None:
     config = load_config('config/config.toml')
-    engine = db.init_db(config)
+    engine = await database.get_engine()
 
     app['config'] = config
     app['engine'] = engine
-
-    async with engine.connect() as conn:
-        await conn.run_sync(db.use_inspector)
 
 
 async def teardown_app(app: web.Application) -> None:

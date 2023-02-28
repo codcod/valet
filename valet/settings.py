@@ -38,7 +38,13 @@ LOGGING = {
     },
     'loggers': {
         'asyncio': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
-        'adev': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+        'adev.server.dft': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'aiosqlite': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+        'watchgod.main': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
     },
 }
 

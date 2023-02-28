@@ -8,52 +8,18 @@ the database.
 Intended to be a main module (hence absolute imports).
 """
 
-import asyncio
-import logging
-import time
 import typing as tp
 from datetime import datetime as dt
 from datetime import timedelta
 
-from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine
+from sqlalchemy.ext.asyncio import AsyncConnection
 
-from valet import db, settings
+from valet import database
 from valet.job import lottery
-from valet.types import ValetConfig
+from valet.job import queries as db
+from valet.logging import get_logger
 
-logger = logging.getLogger(__name__)
-
-
-def setup_logging(config: ValetConfig) -> None:
-    """
-    Setup logging for the job.
-    """
-    level = logging.getLevelName(logging.DEBUG)
-    logging.basicConfig(
-        level=level,
-        format="%(asctime)s [%(module)s] %(message)s",
-        datefmt="%m/%d/%Y %H:%M:%S %Z",
-    )
-    logging.Formatter.converter = time.localtime
-
-
-async def setup_db(config: ValetConfig) -> None:
-    """
-    Set up the database connection.
-    """
-    engine = db.init_db(config)
-
-    async with engine.connect() as conn:
-        await conn.run_sync(db.use_inspector)
-
-    return engine
-
-
-async def teardown_db(engine: AsyncEngine) -> None:
-    """
-    Dispose the access to the database.
-    """
-    await engine.dispose()
+logger = get_logger(__name__)
 
 
 def date_range(
@@ -107,10 +73,7 @@ async def run_job():
     """
     Main part of the job.
     """
-    config = settings.load_config('config/config.toml')
-    setup_logging(config)
-
-    engine: AsyncEngine = await setup_db(config)
+    engine = await database.get_engine()
 
     async with engine.connect() as conn:
         d = dt(2022, 12, 28).date()  # FIXME: for testing
@@ -118,4 +81,4 @@ async def run_job():
             logger.debug(f'Running the lottery for parking {day=:%Y-%m-%d, %A}')
             await run_lottery(conn, day)
 
-        await teardown_db(engine)
+    await engine.dispose()
