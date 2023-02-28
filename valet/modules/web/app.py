@@ -3,8 +3,8 @@ import logging
 from aiohttp import web
 
 from valet import database
+from valet.modules.web.views import routes
 from valet.settings import load_config
-from valet.web.views import routes
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)

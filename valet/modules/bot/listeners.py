@@ -4,7 +4,7 @@ Listener middleware.
 https://slack.dev/bolt-python/concepts#listener-middleware
 """
 
-from valet.bot import queries as db
+from valet.modules.bot import queries as db
 
 
 async def fetch_standing_requests(context, event, next):

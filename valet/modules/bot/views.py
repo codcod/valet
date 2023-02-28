@@ -4,9 +4,9 @@ from slack_bolt.context.ack.async_ack import AsyncAck
 from slack_bolt.context.async_context import AsyncBoltContext
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from valet import date
-from valet.bot import queries as db
+from valet.lib import date
 from valet.logging import get_logger
+from valet.modules.bot import queries as db
 
 logger = get_logger(__name__)
 

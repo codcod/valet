@@ -13,6 +13,8 @@ async def requestors_for_given_day(
 ) -> list[int]:
     """
     Select all users requesting a parking spot on a given day and return their ids.
+
+    See also: `valet.modules.web.queries.requestors_for_given_day()`
     """
     users = metadata.tables['users']
     statuses = metadata.tables['statuses']

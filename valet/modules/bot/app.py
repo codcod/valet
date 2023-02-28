@@ -30,7 +30,7 @@ api = Starlette(
 )
 
 
-from valet.bot import routes
+from valet.modules.bot import routes
 
 # def app_factory():
 #     logger.debug('Web App starts from app factory')

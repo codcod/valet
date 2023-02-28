@@ -13,10 +13,11 @@ from datetime import datetime as dt
 
 from sqlalchemy.ext.asyncio import AsyncConnection
 
-from valet import database, date
-from valet.job import lottery
-from valet.job import queries as db
+from valet import database
+from valet.lib import date
 from valet.logging import get_logger
+from valet.modules.job import lottery
+from valet.modules.job import queries as db
 
 logger = get_logger(__name__)
 

@@ -4,8 +4,8 @@ Interweave view functions and middleware to Slack events.
 Slack events are: messages, commands, actions, view submissions, etc.
 """
 
-from valet.bot import listeners, middleware, views
-from valet.bot.app import app
+from valet.modules.bot import listeners, middleware, views
+from valet.modules.bot.app import app
 
 app.command('/parking')(views.command_parking)
 
