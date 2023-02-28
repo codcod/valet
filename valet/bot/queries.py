@@ -1,10 +1,15 @@
+from datetime import datetime as dt
+
 from sqlalchemy.ext.asyncio import AsyncConnection
 from sqlalchemy.sql import and_, func, insert, select, text
 
+from valet import const
+from valet.database import metadata
 
-async def user_standing_requests(conn: AsyncConnection, id: int):
+
+async def user_standing_requests(conn: AsyncConnection, user_id: int):
     """
-    Select parking spots that are available on a given day and return their ids.
+    Select all `open` requests of a given user.
     """
     stmt = text(
         '''
@@ -13,10 +18,38 @@ async def user_standing_requests(conn: AsyncConnection, id: int):
     join users u on u.user_id = w.user_id
     join statuses s on s.status_id = w.status_id
     where 
-        u.user_id = :id
+        u.user_id = :user_id
     group by w.parking_day
     having s.status_id in (100)
     '''
     )
-    records = await conn.execute(stmt, {'id': id})
+    records = await conn.execute(stmt, {'user_id': user_id})
     return list(records)
+
+
+async def find_by_slack_id(conn: AsyncConnection, slack_id: str) -> int:
+    users = metadata.tables['users']
+
+    stmt = select(users.c.user_id).where(users.c.slack_id == slack_id)
+    result = await conn.execute(stmt)
+    row = result.first()
+
+    return row.user_id
+
+
+async def insert_request(conn: AsyncConnection, user_id: int, parking_day: dt.date):
+    workflow = metadata.tables['workflow']
+
+    await conn.execute(
+        insert(workflow),
+        [
+            {
+                'timestamp': dt.now(),
+                'parking_day': parking_day,
+                'status_id': const.STATUS_REQUESTED,
+                'user_id': user_id,
+            }
+        ],
+    )
+
+    await conn.commit()

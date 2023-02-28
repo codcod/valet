@@ -23,6 +23,7 @@ def upgrade() -> None:
         sa.Column('user_id', sa.Integer, primary_key=True),
         sa.Column('name', sa.String(64), nullable=False),
         sa.Column('surname', sa.String(64), nullable=False),
+        sa.Column('slack_id', sa.String(32), nullable=True, unique=True),
         sqlite_autoincrement=True
     )
     op.create_table(

@@ -8,7 +8,9 @@ from valet.database import metadata
 from valet.types import Winnings
 
 
-async def requestors_for_given_day(conn: AsyncConnection, parking_day: dt.date) -> list[int]:
+async def requestors_for_given_day(
+    conn: AsyncConnection, parking_day: dt.date
+) -> list[int]:
     """
     Select all users requesting a parking spot on a given day and return their ids.
     """

@@ -8,12 +8,12 @@ from valet.bot import queries as db
 
 
 async def fetch_standing_requests(context, event, next):
+    slack_id = event['user']
+
     engine = context['engine']
-
-    user = event['user']
-
     async with engine.connect() as conn:
-        rows = await db.user_standing_requests(conn, id=1)
+        user_id = await db.find_by_slack_id(conn, slack_id)
+        rows = await db.user_standing_requests(conn, user_id)
 
     requests = []
     for r in rows:

@@ -4,24 +4,28 @@ from slack_bolt.context.ack.async_ack import AsyncAck
 from slack_bolt.context.async_context import AsyncBoltContext
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from valet.bot import queries
+from valet import date
+from valet.bot import queries as db
 from valet.logging import get_logger
 
 logger = get_logger(__name__)
 
 
 async def command_parking(
-    ack: AsyncAck, body: dict[str, tp.Any], context: AsyncBoltContext
+    ack: AsyncAck, body: dict[str, tp.Any], context: AsyncBoltContext, respond
 ):
+    slack_id = body['user_id']
+    parking_day = date.to_date(body['text'])
+
     engine: AsyncEngine = context['engine']
 
     async with engine.connect() as conn:
-        rows = await queries.user_standing_requests(conn, id=3)
+        user_id = await db.find_by_slack_id(conn, slack_id)
+        await db.insert_request(conn, user_id, parking_day)
 
-    print(f'{rows=}')
-
-    user_id = body['user_id']
-    await ack(f'Hi <@{user_id}>!')
+    await ack(
+        f'Request made by <@{slack_id}> ({user_id=}) for {parking_day} has been placed'
+    )
 
 
 async def update_home_tab(client, event, context):

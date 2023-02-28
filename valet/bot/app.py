@@ -26,7 +26,7 @@ app_handler = AsyncSlackRequestHandler(app)
 
 api = Starlette(
     debug=True,
-    routes=[Route('/slack/events', endpoint=proxy_endpoint, methods=['POST'])]
+    routes=[Route('/slack/events', endpoint=proxy_endpoint, methods=['POST'])],
 )
 
 
