@@ -1,0 +1,58 @@
+{
+    "type": "home",
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "*Today, 22 January*"
+			}
+		},
+		{
+			"type": "context",
+			"elements": [
+				{
+					"type": "mrkdwn",
+					"text": "New request"
+				}
+			]
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Which day to park:"
+			}
+		},
+		{
+			"type": "actions",
+			"elements": [
+				{
+					"type": "datepicker",
+					"initial_date": "2023-01-01",
+					"placeholder": {
+						"type": "plain_text",
+						"text": "Select a date",
+						"emoji": true
+					},
+					"action_id": "actionId-0"
+				}
+			]
+		},
+		{
+			"type": "actions",
+			"elements": [
+				{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"text": "Submit",
+						"emoji": true
+					},
+					"value": "click_me_123",
+					"action_id": "actionId-1"
+				}
+			]
+		}
+	]
+}

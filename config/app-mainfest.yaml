@@ -10,23 +10,27 @@ features:
     always_online: true
   slash_commands:
     - command: /parking
-      url: https://87ff-89-64-1-231.eu.ngrok.io/slack/events
+      url: https://ngrok.io/slack/events
       description: Tell the Valet what to do
       usage_hint: "[command] [args]"
       should_escape: false
 oauth_config:
   scopes:
     bot:
-      - im:history
-      - im:write
-      - im:read
       - chat:write
       - commands
+      - im:history
+      - im:read
+      - im:write
+      - channels:read
 settings:
   event_subscriptions:
-    request_url: https://87ff-89-64-1-231.eu.ngrok.io/slack/events
+    request_url: https://ngrok.io/slack/events
     bot_events:
       - app_home_opened
+  interactivity:
+    is_enabled: true
+    request_url: https://ngrok.io/slack/events
   org_deploy_enabled: false
   socket_mode_enabled: false
   token_rotation_enabled: false

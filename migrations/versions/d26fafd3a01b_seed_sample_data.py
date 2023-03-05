@@ -23,6 +23,7 @@ def upgrade() -> None:
     op.execute('insert into users(name, surname) values("Jan2", "Kowalski")')
     op.execute('insert into users(name, surname) values("Jan3", "Kowalski")')
     op.execute('insert into users(name, surname) values("Jan4", "Kowalski")')
+    op.execute('insert into users(name, surname, slack_id) values("Nikos", "Ka", "U040RMTUD8E")')
 
     op.execute('insert into spots(number) values ("53")')
     op.execute('insert into spots(number) values ("54")')

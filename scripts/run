@@ -1,1 +1,2 @@
-PYTHONPATH=. gunicorn valet.web.app:make_app -w 1 -k aiohttp.GunicornWebWorker --reload
+# PYTHONPATH=. adev runserver --host 127.0.0.1 --port 8000 --app-factory make_app valet/modules/web/app.py
+PYTHONPATH=. gunicorn valet.modules.web.app:make_app -w 1 -k aiohttp.GunicornWebWorker --reload
