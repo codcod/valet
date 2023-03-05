@@ -7,6 +7,15 @@ def to_date(date_string: str) -> dt.date:
     return dt.strptime(date_string, '%Y-%m-%d').date()
 
 
+def is_date(date_string: str) -> bool:
+    try:
+        to_date(date_string)
+    except ValueError:
+        return False
+
+    return True
+
+
 def range(
     start: dt.date = dt.today().date(), days: int = 5
 ) -> tp.Generator[dt.date, None, None]:

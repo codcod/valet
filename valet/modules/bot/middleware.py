@@ -9,7 +9,7 @@ from valet.logging import get_logger
 logger = get_logger(__name__)
 
 
-async def db(client, context, logger, payload, next):
+async def insert_db_engine(client, context, logger, payload, next):
     """
     Put database engine in the context and dispose it after the call.
     """
