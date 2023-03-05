@@ -16,12 +16,13 @@ def is_date(date_string: str) -> bool:
     return True
 
 
-def range(
+def date_range(
     start: dt.date = dt.today().date(), days: int = 5
 ) -> tp.Generator[dt.date, None, None]:
     """
     Generates 'days' days starting with the next Monday after the `start` day.
     """
+    print(f'START = {start=}')
     until_monday = 7 - start.isoweekday() + 1
     monday = start + timedelta(days=until_monday)
     return (monday + timedelta(days=d) for d in range(days))
