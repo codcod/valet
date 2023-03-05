@@ -18,6 +18,7 @@ from valet.lib import date
 from valet.logging import get_logger
 from valet.modules.job import lottery
 from valet.modules.job import queries as db
+from valet.modules.job import slack
 
 logger = get_logger(__name__)
 
@@ -43,6 +44,7 @@ async def run_lottery(conn: AsyncConnection, parking_day: dt.date) -> None:
 
     if len(requestors) <= k:
         await db.save_lottery_results(conn, parking_day, requestors, parking_spots)
+        await slack.post_message(f'Winners are {requestors}')
 
     elif len(requestors) > k:
         past_winnings = await db.past_winnings(conn)
@@ -56,6 +58,7 @@ async def run_lottery(conn: AsyncConnection, parking_day: dt.date) -> None:
             await db.save_lottery_results(
                 conn, parking_day, winners, parking_spots, losers
             )
+            await slack.post_message(f'Winners are {winners}')
         else:
             logger.debug('There are no winners, nothing to save')
 
@@ -68,7 +71,7 @@ async def run_job():
 
     async with engine.connect() as conn:
         d = dt(2022, 12, 28).date()  # FIXME: for testing
-        for day in date.range(start=d):
+        for day in date.date_range(start=d):
             logger.debug(f'Running the lottery for parking {day=:%Y-%m-%d, %A}')
             await run_lottery(conn, day)
 

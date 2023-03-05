@@ -7,10 +7,10 @@ import socket
 import typing as tp
 
 from slack_sdk.errors import SlackApiError
-from slack_sdk.http_retry import HttpRequest, HttpResponse, RetryHandler, RetryState
-from slack_sdk.http_retry.builtin_interval_calculators import (
-    BackoffRetryIntervalCalculator,
-)
+from slack_sdk.http_retry import HttpRequest, HttpResponse, RetryState
+from slack_sdk.http_retry.async_handler import AsyncRetryHandler
+from slack_sdk.http_retry.builtin_interval_calculators import \
+    BackoffRetryIntervalCalculator
 from slack_sdk.http_retry.jitter import RandomJitter
 from slack_sdk.web.async_client import AsyncWebClient
 
@@ -19,13 +19,13 @@ from valet import settings
 logger = logging.getLogger(__name__)
 
 
-class ConnectionResetRetryHandler(RetryHandler):
-    def _can_retry(
+class ConnectionResetRetryHandler(AsyncRetryHandler):
+    async def _can_retry_async(
         self,
         *,
-        _state: RetryState,
-        _request: HttpRequest,
-        _response: tp.Optional[HttpResponse] = None,
+        state: RetryState,
+        request: HttpRequest,
+        response: tp.Optional[HttpResponse] = None,
         error: tp.Optional[Exception] = None
     ) -> bool:
         # [Errno 104] Connection reset by peer
