@@ -1,4 +1,4 @@
 [database]
 
-DB_URL = 'sqlite+aiosqlite:///.instance/valet.db'
+DB_URL = 'postgresql+asyncpg://postgres:postgres@localhost/postgres'
 DB_ECHO = false

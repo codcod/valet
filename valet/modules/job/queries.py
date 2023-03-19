@@ -24,7 +24,7 @@ async def requestors_for_given_day(
         statuses, workflow.c.status_id == statuses.c.status_id
     )
     stmt = (
-        select(users.c.user_id, func.max(workflow.c.timestamp))
+        select(workflow.c.user_id, func.max(workflow.c.timestamp))
         .select_from(j)
         .where(
             and_(
@@ -39,7 +39,7 @@ async def requestors_for_given_day(
                 workflow.c.parking_day == parking_day,
             )
         )
-        .group_by(workflow.c.user_id)
+        .group_by(workflow.c.user_id, statuses.c.status_id)
         .having(statuses.c.status_id.in_([const.STATUS_REQUESTED]))
     )
     records = await conn.execute(stmt)

@@ -19,7 +19,7 @@ async def user_standing_requests(conn: AsyncConnection, user_id: int):
     join statuses s on s.status_id = w.status_id
     where 
         u.user_id = :user_id
-    group by w.parking_day
+    group by w.parking_day, s.name, s.status_id
     having s.status_id in (100)
     '''
     )

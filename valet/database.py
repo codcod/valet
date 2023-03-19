@@ -31,8 +31,6 @@ def init_db(config: ValetConfig) -> AsyncEngine:
     engine = create_async_engine(
         config_db['DB_URL'],
         echo=config_db['DB_ECHO'],
-        connect_args={'detect_types': sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES},
-        native_datetime=True,
     )
     return engine
 
