@@ -58,8 +58,13 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.drop_table('assignments')
-    op.drop_table('workflow')
-    op.drop_table('users')
-    op.drop_table('spots')
-    op.drop_table('statuses')
+    tables = (
+        'assignments',
+        'workflow',
+        'spots',
+        'users',
+        'statuses'
+    )
+    for table in tables:
+        op.drop_table(table)
+        

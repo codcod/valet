@@ -19,28 +19,28 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.execute('insert into users(name, surname) values("Jan1", "Kowalski")')
-    op.execute('insert into users(name, surname) values("Jan2", "Kowalski")')
-    op.execute('insert into users(name, surname) values("Jan3", "Kowalski")')
-    op.execute('insert into users(name, surname) values("Jan4", "Kowalski")')
-    op.execute('insert into users(name, surname, slack_id) values("Nikos", "Ka", "U040RMTUD8E")')
+    op.execute("insert into users (name, surname) values ('Jan1', 'Kowalski')")
+    op.execute("insert into users (name, surname) values ('Jan2', 'Kowalski')")
+    op.execute("insert into users (name, surname) values ('Jan3', 'Kowalski')")
+    op.execute("insert into users (name, surname) values ('Jan4', 'Kowalski')")
+    op.execute("insert into users (name, surname, slack_id) values ('Nikos', 'Ka', 'U040RMTUD8E')")
 
-    op.execute('insert into spots(number) values ("53")')
-    op.execute('insert into spots(number) values ("54")')
-    op.execute('insert into spots(number) values ("55")')
-    op.execute('insert into spots(number) values ("56")')
-    op.execute('insert into spots(number) values ("57")')
-    op.execute('insert into spots(number) values ("58")')
+    op.execute("insert into spots (number) values ('53')")
+    op.execute("insert into spots (number) values ('54')")
+    op.execute("insert into spots (number) values ('55')")
+    op.execute("insert into spots (number) values ('56')")
+    op.execute("insert into spots (number) values ('57')")
+    op.execute("insert into spots (number) values ('58')")
 
-    op.execute('insert into statuses(status_id, name) values (100, "requested")')
-    op.execute('insert into statuses(status_id, name) values (201, "lottery")')
-    op.execute('insert into statuses(status_id, name) values (210, "cancelled")')
-    op.execute('insert into statuses(status_id, name) values (301, "won")')
-    op.execute('insert into statuses(status_id, name) values (310, "lost")')
-    op.execute('insert into statuses(status_id, name) values (401, "used")')
-    op.execute('insert into statuses(status_id, name) values (402, "unconfirmed")')
-    op.execute('insert into statuses(status_id, name) values (405, "unused")')
-    op.execute('insert into statuses(status_id, name) values (410, "resigned")')
+    op.execute("insert into statuses (status_id, name) values (100, 'requested')")
+    op.execute("insert into statuses (status_id, name) values (201, 'lottery')")
+    op.execute("insert into statuses (status_id, name) values (210, 'cancelled')")
+    op.execute("insert into statuses (status_id, name) values (301, 'won')")
+    op.execute("insert into statuses (status_id, name) values (310, 'lost')")
+    op.execute("insert into statuses (status_id, name) values (401, 'used')")
+    op.execute("insert into statuses (status_id, name) values (402, 'unconfirmed')")
+    op.execute("insert into statuses (status_id, name) values (405, 'unused')")
+    op.execute("insert into statuses (status_id, name) values (410, 'resigned')")
 
     # temporary table to create inserts
     workflow_table = sa.sql.table(
@@ -84,6 +84,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    op.execute('delete from assignments')
+    op.execute('delete from workflow')
     op.execute('delete from users')
     op.execute('delete from spots')
-    op.execute('delete from assignments')
