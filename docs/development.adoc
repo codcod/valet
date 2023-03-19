@@ -11,6 +11,17 @@ $ source .venv/bin/activate
 $ alembic upgrade head
 ----
 
+Add new feature branch:
+
+[source, bash]
+----
+$ git checkout -b feature/new-feature
+$ git add .
+$ git commit
+$ git push -u origin new-feature
+----
+
+
 == Tips
 
 Clear Github credentials in macOS:
