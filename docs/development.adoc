@@ -19,6 +19,10 @@ $ git checkout -b feature/new-feature
 $ git add .
 $ git commit
 $ git push -u origin new-feature
+
+$ git switch main
+$ git fetch origin
+$ git merge origin/main
 ----
 
 
