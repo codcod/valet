@@ -5,7 +5,7 @@ select u.user_id, u.name, u.surname, w.parking_day, s.name as STATUS, max(w.time
 from workflow w
 join users u on u.user_id = w.user_id
 join statuses s on s.status_id = w.status_id
-where 
+where
     w.status_id in (100, 210, 301, 310)
     and w.parking_day="2023-01-02"
 group by w.user_id
@@ -18,18 +18,18 @@ select u.user_id, u.name, u.surname, count(*) as WINS
 from workflow w
 join users u on u.user_id = w.user_id
 join statuses s on s.status_id = w.status_id
-where 
+where
     w.status_id in (401, 402)
 group by w.user_id
 ;
 
 
--- choose past winners but restricted only to current requestors 
+-- choose past winners but restricted only to current requestors
 select u.user_id, u.name, u.surname, count(*) as WINS
 from workflow w
 join users u on u.user_id = w.user_id
 join statuses s on s.status_id = w.status_id
-where 
+where
     w.status_id in (401, 402)
     and u.user_id in (
 
@@ -38,7 +38,7 @@ where
             from workflow w
             join users u on u.user_id = w.user_id
             join statuses s on s.status_id = w.status_id
-            where 
+            where
                 w.status_id in (100, 210, 301, 310)
                 and w.parking_day="2023-01-02"
             group by w.user_id

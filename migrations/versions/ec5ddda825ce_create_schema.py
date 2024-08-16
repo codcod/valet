@@ -1,14 +1,14 @@
 """create schema
 
 Revision ID: ec5ddda825ce
-Revises: 
+Revises:
 Create Date: 2023-01-22 15:43:12.663404
 
 """
-from alembic import op
-import sqlalchemy as sa
-
 from datetime import datetime as dt
+
+import sqlalchemy as sa
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = 'ec5ddda825ce'
@@ -23,25 +23,24 @@ def upgrade() -> None:
         sa.Column('user_id', sa.Integer, primary_key=True),
         sa.Column('name', sa.String(64), nullable=False),
         sa.Column('surname', sa.String(64), nullable=False),
-        sqlite_autoincrement=True
+        sqlite_autoincrement=True,
     )
     op.create_table(
         'spots',
         sa.Column('spot_id', sa.Integer, primary_key=True),
         sa.Column('number', sa.String(64), unique=True),
-        sqlite_autoincrement=True
+        sqlite_autoincrement=True,
     )
     op.create_table(
         'statuses',
         sa.Column('status_id', sa.Integer, primary_key=True),
         sa.Column('name', sa.String(64)),
-        sqlite_autoincrement=True
+        sqlite_autoincrement=True,
     )
     op.create_table(
         'assignments',
         sa.Column('assignment_id', sa.Integer, primary_key=True),
         sa.Column('parking_day', sa.Date),
-        
         sa.Column('user_id', sa.Integer, sa.ForeignKey('users.user_id')),
         sa.Column('spot_id', sa.Integer, sa.ForeignKey('spots.spot_id')),
     )
@@ -50,7 +49,6 @@ def upgrade() -> None:
         sa.Column('workflow_id', sa.Integer, primary_key=True),
         sa.Column('timestamp', sa.DateTime, index=True, default=dt.utcnow),
         sa.Column('parking_day', sa.Date),
-        
         sa.Column('user_id', sa.Integer, sa.ForeignKey('users.user_id')),
         sa.Column('status_id', sa.Integer, sa.ForeignKey('statuses.status_id')),
     )

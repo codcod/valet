@@ -53,7 +53,7 @@ Create database migrations:
 [source, bash]
 ----
 $ alembic init --template async migrations  # alembic.ini:  sqlalchemy.url = sqlite+aiosqlite:///parking.db
-$ alembic revision -m "create schema" 
+$ alembic revision -m "create schema"
 $ alembic upgrade head
 $ alembic downgrade base  # alembic downgrade -1
 ----

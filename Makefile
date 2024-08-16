@@ -10,7 +10,7 @@ venv:
 
 venv-devel: venv
 	( bash -c "source .venv/bin/activate && pip install -r requirements/devel.txt"; )
-	
+
 
 check:
 	mypy --strict --scripts-are-modules --implicit-reexport valet
