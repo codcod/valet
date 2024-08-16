@@ -16,8 +16,10 @@ https://dashboard.ngrok.com/get-started/your-authtoken[dashboard].
 ----
 $ brew install ngrok
 $ ngrok config add-authtoken 25vCWkdk[..]xyz
-$ ngrok http https://127.0.0.1:8000 --host-header="127.0.0.1:8000"
+$ ngrok http http://127.0.0.1:8000 --host-header="127.0.0.1:8000"
 ----
+
+instead of the last line you can also say `./scripts/ingress` in the shell.
 
 The address exposed by Ngrok is used in the Slack integration while creating a
 new Slack app.
@@ -41,23 +43,27 @@ features:
     always_online: true
   slash_commands:
     - command: /parking
-      url: https://87ff-89-64-1-231.eu.ngrok.io/slack/events
+      url: https://ngrok.io/slack/events
       description: Tell the Valet what to do
       usage_hint: "[command] [args]"
       should_escape: false
 oauth_config:
   scopes:
     bot:
-      - im:history
-      - im:write
-      - im:read
       - chat:write
       - commands
+      - im:history
+      - im:read
+      - im:write
+      - channels:read
 settings:
   event_subscriptions:
-    request_url: https://87ff-89-64-1-231.eu.ngrok.io/slack/events
+    request_url: https://ngrok.io/slack/events
     bot_events:
       - app_home_opened
+  interactivity:
+    is_enabled: true
+    request_url: https://ngrok.io/slack/events
   org_deploy_enabled: false
   socket_mode_enabled: false
   token_rotation_enabled: false

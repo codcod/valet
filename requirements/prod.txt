@@ -1,6 +1,9 @@
+aiofiles
 aiohttp
 aiosqlite
 alembic
 gunicorn
-sqlalchemy[asyncio]==2.0.0
 slack_bolt
+sqlalchemy[asyncio]
+starlette
+uvicorn

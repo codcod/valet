@@ -1,47 +1,20 @@
-"""
-Database connection and operations.
-"""
-
-import sqlite3
 from datetime import datetime as dt
 
-from sqlalchemy import MetaData
-from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncConnection
 from sqlalchemy.sql import and_, func, insert, select, text
 
-from . import const
-from .types_ import ValetConfig, Winnings
-
-metadata = MetaData()
-
-
-def use_inspector(conn):
-    """Workaround as SQLAlchemy does not yet offer asyncio version of Inspector.
-
-    https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#using-the-inspector-to-inspect-schema-objects
-    """
-    metadata.reflect(bind=conn)
+from valet import const
+from valet.database import metadata
+from valet.types import Winnings
 
 
-def init_db(config: ValetConfig):
-    """
-    Initialize database based on configuration.
-
-    Passes additional arguments to the underlying `sqlite3` driver.
-    """
-    config_db = config['database']
-    engine = create_async_engine(
-        config_db['DB_URL'],
-        echo=config_db['DB_ECHO'],
-        connect_args={'detect_types': sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES},
-        native_datetime=True,
-    )
-    return engine
-
-
-async def select_requestors(conn: AsyncConnection, parking_day: dt.date) -> list[int]:
+async def requestors_for_given_day(
+    conn: AsyncConnection, parking_day: dt.date
+) -> list[int]:
     """
     Select all users requesting a parking spot on a given day and return their ids.
+
+    See also: `valet.modules.web.queries.requestors_for_given_day()`
     """
     users = metadata.tables['users']
     statuses = metadata.tables['statuses']
@@ -51,7 +24,7 @@ async def select_requestors(conn: AsyncConnection, parking_day: dt.date) -> list
         statuses, workflow.c.status_id == statuses.c.status_id
     )
     stmt = (
-        select(users.c.user_id, func.max(workflow.c.timestamp))
+        select(workflow.c.user_id, func.max(workflow.c.timestamp))
         .select_from(j)
         .where(
             and_(
@@ -66,7 +39,7 @@ async def select_requestors(conn: AsyncConnection, parking_day: dt.date) -> list
                 workflow.c.parking_day == parking_day,
             )
         )
-        .group_by(workflow.c.user_id)
+        .group_by(workflow.c.user_id, statuses.c.status_id)
         .having(statuses.c.status_id.in_([const.STATUS_REQUESTED]))
     )
     records = await conn.execute(stmt)
@@ -118,7 +91,7 @@ async def available_parking_spots(
     return [r[0] for r in records]
 
 
-async def save_results(
+async def save_lottery_results(
     conn: AsyncConnection,
     parking_day: dt,
     winners: list[int],
@@ -174,3 +147,23 @@ async def save_results(
         )
 
     await conn.commit()
+
+
+async def user_standing_requests(conn: AsyncConnection, user_id: int):
+    """
+    Select all `open` requests of a given user.
+    """
+    stmt = text(
+        '''
+    select w.parking_day, s.name, max(w.timestamp)
+    from workflow w
+    join users u on u.user_id = w.user_id
+    join statuses s on s.status_id = w.status_id
+    where 
+        u.user_id = :user_id
+    group by w.parking_day
+    having s.status_id in (100)
+    '''
+    )
+    records = await conn.execute(stmt, {'id': user_id})
+    return list(records)

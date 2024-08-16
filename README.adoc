@@ -8,6 +8,7 @@ Tools used:
 * https://docs.aiohttp.org/en/stable/[Aiohttp]
 * https://www.sqlalchemy.org[SQLAlchemy] (https://aiosqlite.omnilib.dev/en/stable/[aiosqlite] + https://www.sqlite.org/index.html[SQLite])
 * https://alembic.sqlalchemy.org/en/latest/[Alembic]
+* https://github.com/slackapi/bolt-python[Bolt for Python] and https://github.com/slackapi/python-slack-sdk[Python Slack SDK]
 
 == Installation
 
